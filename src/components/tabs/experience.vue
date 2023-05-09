@@ -65,21 +65,6 @@
                     <small class="text-danger">{{ validation.firstError('fromTo')}}</small>
                 </b-form-group>
                 <b-form-group>
-                    <label for="experience-description">
-                        <font-awesome-icon icon="pencil-alt" />
-                        {{$t('labels.description')}}:
-                    </label>
-                    <markdown-editor
-                            id="experience-description"
-                            v-model="description"
-                            theme="primary"
-                            required
-                            :placeholder="$t('placeholders.description')+'...'"
-                            height="200px"
-                            :toolbar="'redo undo | bold italic heading | link | numlist bullist quote | preview'"
-                    ></markdown-editor>
-                </b-form-group>
-                <b-form-group>
                     <label for="experience-tags">
                         <font-awesome-icon icon="tags" />
                         {{ $t('labels.tags') }} :
@@ -94,6 +79,29 @@
                             :placeholder="$t('placeholders.tags')"
                     >
                     </b-form-tags>
+                </b-form-group>
+                
+                <b-form-group>
+                    <label for="experience-description">
+                        <font-awesome-icon icon="pencil-alt" />
+                        {{$t('labels.description')}}:
+                    </label>
+                    <b-button
+                            v-b-tooltip.hover
+                            block type="button"
+                            variant="info">
+                        <i class="fas fa-magic"></i>
+                        {{$t('toggles.generate')}}
+                    </b-button>
+                    <markdown-editor
+                            id="experience-description"
+                            v-model="description"
+                            theme="primary"
+                            required
+                            :placeholder="$t('placeholders.description')+'...'"
+                            height="200px"
+                            :toolbar="'redo undo | bold italic heading | link | numlist bullist quote | preview'"
+                    ></markdown-editor>
                 </b-form-group>
 
 

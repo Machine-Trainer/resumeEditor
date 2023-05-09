@@ -58,6 +58,7 @@ export default {   // English
     toggles: {
         delete: 'Delete Me',
         edit: 'Edit Me',
+        generate: 'Generate Your Experience with ChatGPT',
         change: 'Change Me',
         cancel: 'Cancel',
         submit: 'Submit',

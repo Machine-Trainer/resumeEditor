@@ -58,6 +58,7 @@ export default { // Francais
     toggles: {
         delete: '删除',
         edit: '编辑',
+        generate: '使用ChatGPT生成你的简历',
         change: '更改',
         cancel: '取消',
         submit: '提交',
