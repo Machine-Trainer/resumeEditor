@@ -41,6 +41,7 @@ export default { // Francais
         company: '输入您的公司名称',
         fromTo: '从 - 到',
         description: '写点关于你的经历',
+        chatgpt: '告诉ChatGpt关于你的经历',
         tags: '添加一些相关标签',
         projectName: '您的项目名称',
         projectLink: '项目链接',
@@ -58,6 +59,9 @@ export default { // Francais
     toggles: {
         delete: '删除',
         edit: '编辑',
+        generateIntroduction: '使用ChatGPT生成你的自我介绍',
+        generateExperience: '使用ChatGPT生成你的工作经历',
+        generateEducation: '使用ChatGPT生成你的教育经历',
         generate: '使用ChatGPT生成你的简历',
         change: '更改',
         cancel: '取消',

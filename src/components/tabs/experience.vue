@@ -80,19 +80,28 @@
                     >
                     </b-form-tags>
                 </b-form-group>
-                
                 <b-form-group>
                     <label for="experience-description">
                         <font-awesome-icon icon="pencil-alt" />
                         {{$t('labels.description')}}:
                     </label>
+                    <b-form-textarea
+                        v-model="message"
+                        :placeholder="$t('placeholders.chatgpt')+'...'"
+                        rows="5"></b-form-textarea>
                     <b-button
                             v-b-tooltip.hover
                             block type="button"
+                            @click="generateExperience"
                             variant="info">
                         <i class="fas fa-magic"></i>
-                        {{$t('toggles.generate')}}
+                        {{$t('toggles.generateExperience')}}
                     </b-button>
+                    <div v-if="isLoading" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="info" type="grow">
+                            Loading...
+                        </b-spinner>
+                    </div>
                     <markdown-editor
                             id="experience-description"
                             v-model="description"
@@ -141,6 +150,7 @@
 <script>
     import { mapGetters } from "vuex";
     import SimpleVueValidation from "simple-vue-validator";
+    import axios from 'axios';
     const Validator = SimpleVueValidation.Validator;
 
     export default {
@@ -151,11 +161,13 @@
                     id: 1,
                     role: '',
                     company: '',
-                    fromTo: '',
+                    fromTo: [],
                     description: '',
                     tags: [],
                     isCurrentJob: false
                 },
+                message: '',
+                isLoading: false,
             }
         },
         computed: {
@@ -320,6 +332,39 @@
                         this.onReset()
                     }
                 });
+            },
+            generateExperience(){
+                if(!this.message) return;
+                if(this.getEditedExperience){
+                    this.experience = this.$store.state.edit.experiences;
+                }
+                const requestBody = {
+                    "id": this.experience.id,
+                    "role": this.experience.role,
+                    "company": this.experience.company,
+                    "fromTo": this.experience.fromTo,
+                    "isCurrentJob": this.experience.isCurrentJob,
+                    "description": this.message,
+                    "tags": this.experience.tags
+                };
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                this.isLoading=true;
+                axios.post('http://localhost:8090/api/generateExperience', requestBody,{ headers })
+                    .then(response => {
+                        console.log(requestBody);
+                        if (this.getEditedExperience) {
+                            this.$store.state.edit.experiences.description = response.data['generatedContent'];
+                        } else {
+                            this.experience.description = response.data['generatedContent'];
+                        }
+                        this.isLoading=false;
+                    })
+                    .catch(error => {
+                        this.isLoading=false;
+                        console.log(error);
+                    });
             },
             // add validation
             onSubmit() {

@@ -51,21 +51,6 @@
             </b-form-group>
 
             <b-form-group>
-                <label for="project-description">
-                    <font-awesome-icon icon="pencil-alt" />
-                    {{ $t('labels.description') }} :
-                </label>
-                <markdown-editor
-                        id="project-description"
-                        v-model="description"
-                        theme="primary"
-                        :placeholder="$t('placeholders.description')+'...'"
-                        height="200px"
-                        :toolbar="'redo undo | bold italic heading | link | numlist bullist quote | preview'"
-                ></markdown-editor>
-            </b-form-group>
-
-            <b-form-group>
                 <label for="project-tags">
                     <font-awesome-icon icon="tags" />
                     {{ $t('labels.tags') }} :
@@ -79,6 +64,40 @@
                         :placeholder="$t('placeholders.tags')"
                 ></b-form-tags>
             </b-form-group>
+
+            <b-form-group>
+                <label for="project-description">
+                    <font-awesome-icon icon="pencil-alt" />
+                    {{ $t('labels.description') }} :
+                </label>
+                <b-form-textarea
+                    v-model="message"
+                    :placeholder="$t('placeholders.chatgpt')+'...'"
+                    rows="5">
+                </b-form-textarea>
+                <b-button
+                        v-b-tooltip.hover
+                        block type="button"
+                        @click="generateProjectDescription"
+                        variant="info">
+                    <i class="fas fa-magic"></i>
+                    {{$t('toggles.generateProjectDescription')}}
+                </b-button>
+                <div v-if="isLoading" class="d-flex justify-content-center mb-3">
+                    <b-spinner variant="info" type="grow">
+                        Loading...
+                    </b-spinner>
+                </div>
+                <markdown-editor
+                        id="project-description"
+                        v-model="description"
+                        theme="primary"
+                        :placeholder="$t('placeholders.description')+'...'"
+                        height="200px"
+                        :toolbar="'redo undo | bold italic heading | link | numlist bullist quote | preview'"
+                ></markdown-editor>
+            </b-form-group>
+
             <div v-if="getEditedProject">
                 <b-button
                         v-b-tooltip.hover
@@ -110,6 +129,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import {mapGetters} from "vuex";
     import SimpleVueValidation from "simple-vue-validator";
     const Validator = SimpleVueValidation.Validator;
@@ -125,7 +145,9 @@
                     fromTo: '',
                     description: '',
                     tags: []
-                }
+                },
+                isLoading: false,
+                message: '',
             }
         },
         computed: {
@@ -286,6 +308,34 @@
                         this.onReset()
                     }
                 })
+            },
+            generateProjectDescription(){
+                if(!this.message) return;
+                if(this.getEditedProject){
+                    this.project = this.$store.state.edit.projects;
+                }
+                const requestBody = {
+                    "id":            this.project.id,
+                    "name":          this.project.name,
+                    "link":          this.project.link,
+                    "fromTo":        this.project.fromTo,
+                    "description":   this.message,
+                    "tags":          this.project.tags,
+                };
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                this.isLoading=true;
+                axios.post('http://localhost:8090/api/generateProject', requestBody,{ headers })
+                    .then(response => {
+                        console.log(response.data['generatedContent']);
+                        this.project.description = response.data['generatedContent'];
+                        this.isLoading=false;
+                    })
+                    .catch(error => {
+                        this.isLoading=false;
+                        console.log(error);
+                    });
             },
         }
     }

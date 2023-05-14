@@ -41,6 +41,7 @@ export default {   // English
         company: 'Enter your Company Name',
         fromTo: 'From - To',
         description: 'Write something about your experience',
+        chatgpt: 'Tell ChatGpt what you want to say',
         tags: 'Add some Relative Tags',
         projectName: 'Your Project Name',
         projectLink: 'Project Link',
@@ -58,7 +59,9 @@ export default {   // English
     toggles: {
         delete: 'Delete Me',
         edit: 'Edit Me',
-        generate: 'Generate Your Experience with ChatGPT',
+        generateIntroduction: 'Generate Your Introduction with ChatGPT',
+        generateExperience: 'Generate Your Working Experience with ChatGPT',
+        generateProjectDescription: 'Generate Your Project Experience with ChatGPT',
         change: 'Change Me',
         cancel: 'Cancel',
         submit: 'Submit',
