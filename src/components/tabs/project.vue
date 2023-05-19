@@ -311,16 +311,14 @@
             },
             generateProjectDescription(){
                 if(!this.message) return;
-                if(this.getEditedProject){
-                    this.project = this.$store.state.edit.projects;
-                }
+                const information = this.getEditedProject? this.$store.state.edit.projects:this.project;
                 const requestBody = {
-                    "id":            this.project.id,
-                    "name":          this.project.name,
-                    "link":          this.project.link,
-                    "fromTo":        this.project.fromTo,
+                    "id":            information.id,
+                    "name":          information.name,
+                    "link":          information.link,
+                    "fromTo":        information.fromTo,
                     "description":   this.message,
-                    "tags":          this.project.tags,
+                    "tags":          information.tags,
                 };
                 const headers = {
                     'Content-Type': 'application/json',
@@ -328,8 +326,11 @@
                 this.isLoading=true;
                 axios.post('http://localhost:8090/api/generateProject', requestBody,{ headers })
                     .then(response => {
-                        console.log(response.data['generatedContent']);
-                        this.project.description = response.data['generatedContent'];
+                        if(this.getEditedProject){
+                            this.$store.state.edit.projects.description = response.data['generatedContent'];
+                        }else{
+                            this.project.description = response.data['generatedContent'];
+                        }
                         this.isLoading=false;
                     })
                     .catch(error => {

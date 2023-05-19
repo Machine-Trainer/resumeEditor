@@ -325,6 +325,7 @@
                                 has: true,
                             });
                         }
+                        console.log("EditState",state);
                         this.$store.dispatch('submitEditedState', {
                             field: state,
                             id: id
@@ -335,25 +336,23 @@
             },
             generateExperience(){
                 if(!this.message) return;
-                if(this.getEditedExperience){
-                    this.experience = this.$store.state.edit.experiences;
-                }
+                const information = this.getEditedExperience? this.$store.state.edit.experiences:this.experience;
                 const requestBody = {
-                    "id": this.experience.id,
-                    "role": this.experience.role,
-                    "company": this.experience.company,
-                    "fromTo": this.experience.fromTo,
-                    "isCurrentJob": this.experience.isCurrentJob,
+                    "id": information.id,
+                    "role": information.role,
+                    "company": information.company,
+                    "fromTo": information.fromTo,
+                    "isCurrentJob": information.isCurrentJob,
                     "description": this.message,
-                    "tags": this.experience.tags
+                    "tags": information.tags
                 };
+                console.log(information)
                 const headers = {
                     'Content-Type': 'application/json',
                 };
                 this.isLoading=true;
                 axios.post('http://localhost:8090/api/generateExperience', requestBody,{ headers })
                     .then(response => {
-                        console.log(requestBody);
                         if (this.getEditedExperience) {
                             this.$store.state.edit.experiences.description = response.data['generatedContent'];
                         } else {
