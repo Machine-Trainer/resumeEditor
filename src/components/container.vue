@@ -13,7 +13,7 @@
             </b-col>
         </b-row>
         <b-button
-                @click="print"
+                @click="sendData"
                 v-b-tooltip.hover
                 :title="$t('toggles.print')"
                 variant="dark"
@@ -29,6 +29,7 @@
     import paper from './paper.vue'
     import jsPDF from 'jspdf'
     import html2canvas from 'html2canvas'
+    import axios from 'axios'
 
     export default {
         name: 'appContainer',
@@ -37,6 +38,20 @@
             paper
         },
         methods: {
+            sendData() {
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                console.log(this.$store.state.form);
+                axios.post('http://localhost:8090/data/resumeData', this.$store.state.form,{ headers })
+                    .then(response => {
+                        console.log(response);
+                        this.print();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
             print () {
                 // change the default width of the paper
                 document.getElementById('paper').setAttribute("style","width:1000px");
