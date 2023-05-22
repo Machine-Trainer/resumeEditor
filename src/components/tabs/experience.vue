@@ -325,7 +325,6 @@
                                 has: true,
                             });
                         }
-                        console.log("EditState",state);
                         this.$store.dispatch('submitEditedState', {
                             field: state,
                             id: id
@@ -346,7 +345,6 @@
                     "description": this.message,
                     "tags": information.tags
                 };
-                console.log(information)
                 const headers = {
                     'Content-Type': 'application/json',
                 };

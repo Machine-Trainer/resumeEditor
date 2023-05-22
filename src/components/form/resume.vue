@@ -63,7 +63,6 @@
                 this.isLoading=true;
                 axios.post('http://localhost:8090/api/generateIntroduction', requestBody,{ headers })
                     .then(response => {
-                        console.log(response.data['generatedContent']);
                         this.updateResume(response.data['generatedContent']);
                         this.description = response.data['generatedContent'];
                         this.isLoading=false;
